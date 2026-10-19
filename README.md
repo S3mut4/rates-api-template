@@ -56,23 +56,25 @@ Notes:
 
 ## PATCH /api/rates/{currency}
 
-Precondition: currency `YYY` (rate 0.95) is created before each test and deleted after it.
-
 | ID     | Category | Test case                                   | Expected result               |
 |--------|----------|---------------------------------------------|-------------------------------|
 | TC-001 | Positive | Update rate to 1.1                          | 200, returns updated currency |
 | TC-002 | Positive | Updated rate is persisted (GET after PATCH) | 200, rate 1.1                 |
-| TC-003 | Boundary | Rate `0.000001`                             | 200                           |
-| TC-004 | Boundary | Rate `1000000`                              | 200                           |
-| TC-005 | Boundary | Rate `0`                                    | 400                           |
-| TC-006 | Boundary | Rate `1000000.01`                           | 400                           |
-| TC-007 | Negative | Negative rate `-1`                          | 400                           |
-| TC-008 | Negative | Non-numeric rate `'RU'`                     | 400                           |
-| TC-009 | Negative | Numeric string rate `'1.10'`                | 400                           |
-| TC-010 | Negative | Null rate                                   | 400                           |
-| TC-011 | Negative | Missing rate `{}`                           | 400                           |
-| TC-012 | Negative | Invalid JSON                                | 400                           |
+| TC-003 | Boundary | Very small positive rate `0.000001`         | 200, returns updated currency |
+| TC-004 | Boundary | Maximum rate `1000000`                      | 200, returns updated currency |
+| TC-005 | Boundary | Rate `0`                                    | 400, rate unchanged           |
+| TC-006 | Boundary | Rate `1000000.01`                           | 400, rate unchanged           |
+| TC-007 | Negative | Negative rate `-1`                          | 400, rate unchanged           |
+| TC-008 | Negative | Non-numeric rate `'RU'`                     | 400, rate unchanged           |
+| TC-009 | Negative | Numeric string rate `'1.10'`                | 400, rate unchanged           |
+| TC-010 | Negative | Null rate                                   | 400, rate unchanged           |
+| TC-011 | Negative | Missing rate `{}`                           | 400, rate unchanged           |
+| TC-012 | Negative | Invalid JSON                                | 400, rate unchanged           |
 | TC-013 | Negative | Lowercase code `yyy`                        | 400                           |
 | TC-014 | Negative | Too short code `YY`                         | 400                           |
 | TC-015 | Negative | Too long code `YYYY`                        | 400                           |
-| TC-016 | Negative | Unknown currency `RRR`                      | 404                           |
+| TC-016 | Negative | Unknown currency `RRR` (deleted first)      | 404                           |
+| TC-017 | Negative | Non-Latin code `ÜSD`                        | 400                           |
+| TC-018 | Negative | Code with digit `US1`                       | 400                           |
+| TC-019 | Negative | Mixed case code `Usd`                       | 400                           |
+| TC-020 | Negative | Body larger than                            |                               |
